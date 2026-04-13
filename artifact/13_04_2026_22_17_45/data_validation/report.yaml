@@ -1,0 +1,8 @@
+message:
+- 'job_location is not all values are object or string in dataframe '
+- 'job_via is not all values are object or string in dataframe '
+- 'job_schedule_type is not all values are object or string in dataframe '
+- 'job_location is not all values are object or string in dataframe '
+- 'job_via is not all values are object or string in dataframe '
+- 'job_schedule_type is not all values are object or string in dataframe '
+status: false

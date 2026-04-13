@@ -1,0 +1,15 @@
+column:     
+  job_title_short: object        
+  job_title: object        
+  job_location: object        
+  job_country: object        
+  job_via: object        
+  job_schedule_type: object        
+  job_work_from_home: bool          
+  search_location: object        
+  job_posted_date: datetime
+  job_no_degree_mention: bool          
+  job_health_insurance: bool          
+  company_name: object        
+  job_skills: object        
+  salary: float       
