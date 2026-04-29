@@ -1,13 +1,15 @@
-from src.components.data_ingestion import DataIngestion
 from src.logger import logging
 from src.exception import MyException
+from src.components.data_ingestion import DataIngestion
 from src.components.data_validation import DataValidation
-from src.entity.config_entity import DataIngestionConfig,DataValidationConfig,TrainingPipelineConfig
+from src.components.data_transformation import DataTransformation
+from src.entity.config_entity import DataIngestionConfig,DataValidationConfig,TrainingPipelineConfig,DataTransformationConfig
 class TrainingPipeline:
     def __init__(self):
         self.pipeline_config = TrainingPipelineConfig()
         self.data_ingestion_config=DataIngestionConfig(training_pipeline_config=self.pipeline_config)
         self.data_validation_config=DataValidationConfig(training_pipeline_config=self.pipeline_config)
+        self.data_transformation_config=DataTransformationConfig(training_pipeline_config=self.pipeline_config)
     def start_data_ingestion(self):
         try:
             logging.info("Data ingestion started")
@@ -26,9 +28,19 @@ class TrainingPipeline:
             return data_validation_artifact
         except Exception as e:
             raise MyException(e) from e
+    def start_data_transformation(self,data_validation_artifact,data_ingestion_artifact):
+        try:
+            logging.info("Data Transformation started")
+            data_transformation=DataTransformation(data_transformation_config=self.data_transformation_config,data_ingestion_artifact=data_ingestion_artifact,data_validation_artifact=data_validation_artifact)
+            data_transformation_artifact=data_transformation.IniciateDataTransformation()
+            logging.info("Data Transformation completed")
+            return data_transformation_artifact
+        except Exception as e:
+            raise MyException(e) from e
     def run_pipeline(self):
         try:
             data_ingestion_artifact=self.start_data_ingestion()
             data_validation_artifact=self.start_data_validation(data_ingestion_artifact=data_ingestion_artifact)
+            data_transformation_artifact=self.start_data_transformation(data_ingestion_artifact=data_ingestion_artifact,data_validation_artifact=data_validation_artifact)
         except Exception as e:
             raise MyException(e) from e

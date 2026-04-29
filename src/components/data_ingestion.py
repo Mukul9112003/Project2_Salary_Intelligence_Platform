@@ -16,6 +16,7 @@ class DataIngestion:
         try:
             my_data=MongoDataFetcher()
             df=my_data.fetch_data_from_database()
+            df["salary"] = (df["salary"] / 100).round() * 100
             dir_file=os.path.dirname(self.data_ingestion_config.feature_store)
             os.makedirs(dir_file,exist_ok=True)
             df.to_csv(self.data_ingestion_config.feature_store,index=False,header=True)

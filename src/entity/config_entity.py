@@ -32,3 +32,19 @@ class DataValidationConfig:
     def __post_init__(self):
         self.data_validation_dir=os.path.join(self.training_pipeline_config.artifact_path,DATA_VALIDATION_DIR_NAME)
         self.validation_report_file_path=os.path.join(self.data_validation_dir,REPORT_FILE_PATH)
+@dataclass
+class DataTransformationConfig:
+    training_pipeline_config:TrainingPipelineConfig
+    data_transformation_dir:str=field(init=False)
+    transformed_train_X_file_path:str=field(init=False)
+    transformed_train_Y_file_path:str=field(init=False)
+    transformed_test_X_file_path:str=field(init=False)
+    transformed_test_Y_file_path:str=field(init=False)
+    preprocessing_object_file_path:str=field(init=False)
+    def __post_init__(self):
+        self.data_transformation_dir=os.path.join(self.training_pipeline_config.artifact_path,DATA_TRANSFORMATION_DIR_NAME)
+        self.transformed_train_X_file_path=os.path.join(self.data_transformation_dir,DATA_TRANSFORMATION_TRANSFORMED_DATA_DIR,TRAIN_X_FILE_NAME)
+        self.transformed_train_Y_file_path=os.path.join(self.data_transformation_dir,DATA_TRANSFORMATION_TRANSFORMED_DATA_DIR,TRAIN_Y_FILE_NAME)
+        self.transformed_test_X_file_path=os.path.join(self.data_transformation_dir,DATA_TRANSFORMATION_TRANSFORMED_DATA_DIR,TEST_X_FILE_NAME)
+        self.transformed_test_Y_file_path=os.path.join(self.data_transformation_dir,DATA_TRANSFORMATION_TRANSFORMED_DATA_DIR,TEST_Y_FILE_NAME)
+        self.preprocessing_object_file_path=os.path.join(self.data_transformation_dir,DATA_TRANSFORMATION_TRANSFORMED_OBJECT_DIR,PREPROCESSING_OBJECT_FILE_NAME)

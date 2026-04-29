@@ -12,4 +12,4 @@ column:
   job_health_insurance: bool          
   company_name: object        
   job_skills: object        
-  salary: float       
+  salary: float 
