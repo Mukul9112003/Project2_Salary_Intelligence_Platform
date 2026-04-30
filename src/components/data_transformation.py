@@ -3,6 +3,8 @@ from src.logger import logging
 import numpy as np
 import pandas as pd
 import os
+from ast import literal_eval
+from sklearn.preprocessing import FunctionTransformer
 from src.utils.main_utils import read_yaml_file,read_csv_file,save_object,save_numpy_array
 from src.constants import SCHEMA_FILE_NAME,TARGET_COLUMN
 from sklearn.base import BaseEstimator,TransformerMixin
@@ -40,6 +42,21 @@ class MeraTransformer(BaseEstimator,TransformerMixin):
         X["seniority"]=X["job_title"].apply(extract_level)
         cols = ["job_work_from_home","job_no_degree_mention","job_health_insurance"]
         X[cols]=X[cols].astype(int)
+        from ast import literal_eval
+        def clean_skills(x):
+            try:
+                if isinstance(x, list):
+                    return " ".join(x)
+                elif isinstance(x, str) and x.startswith("["):
+                    return " ".join(literal_eval(x))
+                elif isinstance(x, str):
+                    return x
+                else:
+                    return ""
+            except:
+                return ""
+
+        X["job_skills"] = X["job_skills"].apply(clean_skills)
         X = X.drop(columns=[c for c in ["search_location","job_posted_date"] if c in X.columns])
         return X
 class DataTransformation:
@@ -57,7 +74,7 @@ class DataTransformation:
                 ("category_handling",ColumnTransformer(transformers=[
                     ("cat",OneHotEncoder(handle_unknown="ignore"),["job_title_short","job_schedule_type","seniority","quarter"]),
                     ("target",TargetEncoder(),["company_name","job_country","job_location"]),
-                    ("text",TfidfVectorizer(max_features=100), "job_skills"),
+                    ("text", Pipeline([("selector", FunctionTransformer(lambda x: x.iloc[:,0], validate=False)),("tfidf", TfidfVectorizer(max_features=100))]), ["job_skills"])
                     ],remainder="drop")
                     )
                     ])
@@ -77,6 +94,8 @@ class DataTransformation:
                 logging.info("Preprocessing object made successfully")
                 X_transformed_train=preprocessing.transform(X_train)
                 X_transformed_test=preprocessing.transform(X_test)
+                X_transformed_train=X_transformed_train.toarray()
+                X_transformed_test=X_transformed_test.toarray()
                 dir_name=os.path.dirname(self.data_transformation_config.preprocessing_object_file_path)
                 os.makedirs(dir_name,exist_ok=True)
                 save_object(filepath=self.data_transformation_config.preprocessing_object_file_path,content=preprocessing)
