@@ -1,0 +1,11 @@
+fastapi
+uvicorn
+pandas
+numpy
+scikit-learn
+boto3
+pydantic
+joblib
+from-root
+mypy_boto3_s3
+dill
