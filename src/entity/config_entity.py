@@ -58,3 +58,16 @@ class ModelTrainerConfig:
         self.model_trainer_dir_name=os.path.join(self.training_pipeline_config.artifact_path,MODEL_TRAINER_DIR_NAME)
         self.model_trainer_metric_dir=os.path.join(self.model_trainer_dir_name,MODEL_TRAINER_METRIC_DIR)
         self.trained_model_path=os.path.join(self.model_trainer_dir_name,MODEL_TRAINER_MODEL_DIR,MODEL_NAME)
+@dataclass
+class ModelEvaluationConfig:
+    training_pipeline_config:TrainingPipelineConfig
+    model_evaluation_dir_name:str=field(init=False)
+    bucket_name: str = MODEL_BUCKET_NAME
+    s3_model_key_path: str = MODEL_NAME
+    def __post_init__(self):
+        self.model_evaluation_dir_name=os.path.join(self.training_pipeline_config.artifact_path,MODEL_EVALUATION_DIR_NAME)
+        self.result=os.path.join(self.model_evaluation_dir_name,RESULT)
+@dataclass
+class ModelPusherConfig:
+    bucket_name: str = MODEL_BUCKET_NAME
+    s3_model_key_path: str = MODEL_NAME
