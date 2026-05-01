@@ -30,7 +30,7 @@ def home():
 def predict(data: SalaryRequest):
     try:
         input_dict = data.dict()
-        prediction = pipeline.predict(input_df)
+        prediction = pipeline.predict(input_dict)
         return {
             "predicted_salary": float(prediction)
         }
