@@ -10,3 +10,4 @@ from-root
 mypy_boto3_s3
 dill
 PyYAML
+category-encoders
