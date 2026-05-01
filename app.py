@@ -18,7 +18,6 @@ class SalaryRequest(BaseModel):
     job_no_degree_mention: int
     job_health_insurance: int
     job_skills: str   # "python sql ml"
-    job_via: str
     job_posted_date: str  # "2023-08-01"
 
 

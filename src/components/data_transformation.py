@@ -20,10 +20,8 @@ class MeraTransformer(BaseEstimator,TransformerMixin):
     def __init__(self):
         self.config=read_yaml_file(filepath=SCHEMA_FILE_NAME)
     def fit(self,X,Y=None):
-        self.modes=X["job_via"].mode()[0]
         return self
     def transform(self,X,y=None):
-        X["job_via"]=X["job_via"].fillna(self.modes)
         if "job_posted_date" in X.columns:
             X["job_posted_date"] = pd.to_datetime(X["job_posted_date"], errors="coerce")
             X["month"]=X["job_posted_date"].dt.month
@@ -57,7 +55,7 @@ class MeraTransformer(BaseEstimator,TransformerMixin):
                 return ""
 
         X["job_skills"] = X["job_skills"].apply(clean_skills)
-        X = X.drop(columns=[c for c in ["search_location","job_posted_date"] if c in X.columns])
+        X = X.drop(columns=[c for c in ["job_via","search_location","job_posted_date"] if c in X.columns])
         return X
 class DataTransformation:
     def __init__(self,data_transformation_config:DataTransformationConfig,data_validation_artifact:DataValidationArtifact,data_ingestion_artifact:DataIngestionArtifact):
