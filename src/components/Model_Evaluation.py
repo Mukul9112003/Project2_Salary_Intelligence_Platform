@@ -72,7 +72,7 @@ class ModelEvaluation:
                 logging.info("Model ACCEPTED")
                 tracking_uri = os.getenv("MLFLOW_TRACKING_URI", MLFLOW_TRACKING_URI)
                 mlflow.set_tracking_uri(tracking_uri)
-                mlflow.set_experiment("churn_prediction")
+                mlflow.set_experiment("salary_prediction")
 
                 with mlflow.start_run():
 

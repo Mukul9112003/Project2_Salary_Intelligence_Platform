@@ -20,7 +20,7 @@ class S3Client:
                     logging.error(msg)
                     raise Exception(msg)
                 S3Client.s3_resource=boto3.resource('s3',aws_access_key_id=_access_key_id,aws_secret_access_key=_secrect_access_key,region_name=region_name)
-                S3Client.s3_client=boto3.client('s3',aws_access_key_id=_access_key_id,aws_secret_access_key=_secrect_access_key,region_name=region_name)
+                S3Client.s3_client=boto3.client("s3",aws_access_key_id=_access_key_id,aws_secret_access_key=_secrect_access_key,region_name=region_name)
             self.s3_client=S3Client.s3_client
             self.s3_resource=S3Client.s3_resource
         except Exception as e:
