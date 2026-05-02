@@ -21,7 +21,6 @@ data = {
     "job_no_degree_mention": 0,
     "job_health_insurance": 1,
     "job_skills": "python, sql, airflow",
-    "job_via": "LinkedIn",
     "job_posted_date": "2023-12-01"
 }
 

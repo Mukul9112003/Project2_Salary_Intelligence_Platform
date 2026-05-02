@@ -2,9 +2,18 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 import pandas as pd
 from src.pipeline.prediction_pipeline import PredictionPipeline
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
+app = FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 pipeline = PredictionPipeline()
 
 class SalaryRequest(BaseModel):
