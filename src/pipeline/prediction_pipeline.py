@@ -28,6 +28,6 @@ class PredictionPipeline:
         try:
             df = pd.DataFrame([data])
             prediction = self.estimator.predict(df)
-            return int(prediction)
+            return prediction.item()
         except Exception as e:
             raise MyException(e)
