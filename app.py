@@ -6,15 +6,31 @@ from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
-app = FastAPI()
+# ✅ CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
-pipeline = PredictionPipeline()
+
+# ❌ REMOVE this
+# pipeline = PredictionPipeline()
+
+# ✅ GLOBAL VARIABLE
+pipeline = None
+
+# ✅ LOAD SAFELY AT STARTUP
+@app.on_event("startup")
+def load_pipeline():
+    global pipeline
+    try:
+        print("Loading pipeline...")
+        pipeline = PredictionPipeline()
+        print("Pipeline loaded successfully")
+    except Exception as e:
+        print(f"Pipeline failed to load: {e}")
 
 class SalaryRequest(BaseModel):
     job_title: str
@@ -26,8 +42,8 @@ class SalaryRequest(BaseModel):
     job_work_from_home: int
     job_no_degree_mention: int
     job_health_insurance: int
-    job_skills: str   # "python sql ml"
-    job_posted_date: str  # "2023-08-01"
+    job_skills: str
+    job_posted_date: str
 
 
 @app.get("/")
@@ -38,10 +54,15 @@ def home():
 @app.post("/predict")
 def predict(data: SalaryRequest):
     try:
+        if pipeline is None:
+            return {"error": "Pipeline not loaded"}
+
         input_dict = data.dict()
         prediction = pipeline.predict(input_dict)
+
         return {
             "predicted_salary": float(prediction)
         }
+
     except Exception as e:
         return {"error": str(e)}
