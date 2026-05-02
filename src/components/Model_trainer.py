@@ -6,9 +6,9 @@ from src.entity.estimator import MyModel
 from src.entity.config_entity import ModelTrainerConfig
 from src.entity.artifact_entity import ModelTrainerArtifact,RegressionMetricArtifact,DataTransformationArtifact
 from src.utils.main_utils import read_yaml_file,load_numpy_array,save_object,load_object,write_yaml_file
-from sklearn.ensemble import RandomForestRegressor
+from xgboost import XGBRegressor
 import numpy as np
-from sklearn.base import BaseEstimator,ClassifierMixin
+
 from sklearn.metrics import r2_score,mean_absolute_error,mean_squared_error
 class ModelTrainer:
     def __init__(self,data_transformation_artifact:DataTransformationArtifact,model_trainer_config:ModelTrainerConfig):
@@ -20,8 +20,8 @@ class ModelTrainer:
             raise MyException(e) from e
     def training_model(self,X_train,Y_train,X_test,Y_test):
         try:
-            parameter=self._ModelSchema["Best"]
-            model=RandomForestRegressor(**parameter)
+            #parameter=self._ModelSchema["Best"]
+            model=XGBRegressor() 
             model.fit(X_train,Y_train)
             Y_pred=model.predict(X_test)
             mean_squared_error_val=float(mean_squared_error(Y_test,Y_pred))
@@ -38,11 +38,13 @@ class ModelTrainer:
             raise MyException(e) from e
     def Iniciate_Model_Trainer(self):
         try:
-            X_train=load_numpy_array(self.data_transformation_artifact.trained_transformed_X_filepath)
-            Y_train=load_numpy_array(self.data_transformation_artifact.trained_transformed_Y_filepath)
+            X_train=load_object(self.data_transformation_artifact.trained_transformed_X_filepath)
+            Y_train=load_object(self.data_transformation_artifact.trained_transformed_Y_filepath)
             logging.info("train data loaded successfully")
-            X_test=load_numpy_array(self.data_transformation_artifact.tested_transformed_X_filepath)
-            Y_test=load_numpy_array(self.data_transformation_artifact.tested_transformed_Y_filepath)
+            X_test=load_object(self.data_transformation_artifact.tested_transformed_X_filepath)
+            Y_test=load_object(self.data_transformation_artifact.tested_transformed_Y_filepath)
+            Y_train = np.ravel(Y_train)
+            Y_test = np.ravel(Y_test)
             logging.info("test data loaded successfully")
             model,metric,report=self.training_model(X_train=X_train,Y_train=Y_train,X_test=X_test,Y_test=Y_test)
             logging.info("model trained successfully")

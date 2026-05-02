@@ -80,7 +80,7 @@ class ModelEvaluation:
                     mlflow.log_metric("best_f1", response.best_model_r2_score or 0)
                     mlflow.log_metric("difference", response.difference)
                     mlflow.log_param("status", "accepted")
-                    mlflow.sklearn.log_model(trained_model, name="model")
+                    # mlflow.sklearn.log_model(trained_model, name="model")
             else:
                 logging.info("Model REJECTED — skipping MLflow + S3")
             dirname=os.path.dirname(self.model_eval_config.result)
