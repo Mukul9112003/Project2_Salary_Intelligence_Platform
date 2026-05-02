@@ -19,6 +19,7 @@ class SalaryRequest(BaseModel):
     job_health_insurance: int
     job_skills: str   # "python sql ml"
     job_posted_date: str  # "2023-08-01"
+    job_via:str
 
 
 @app.get("/")
